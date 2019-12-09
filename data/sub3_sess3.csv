@@ -1,0 +1,4 @@
+subj,trial,face,object,sceneFace,color,rating,rt,trialStart,trialEnd,val
+,1,faces/3.jpg,objects/portapotty.jpg,face,b,1,1.094,1.2166187360417098,2.322032895986922,notVivid,
+,2,faces/2.jpg,objects/tomato01.jpg,face,r,4,1.265,6.358556277002208,7.641730310046114,Neutral,,
+,3,faces/1.jpg,objects/pepper04a.jpg,face,r,7,1.28,11.678989098989405,12.97719322098419,Vivid,,,
