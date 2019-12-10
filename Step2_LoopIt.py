@@ -65,6 +65,7 @@ myScale = visual.RatingScale(win, low=1, high=7, marker='triangle',
 bigFeedback = visual.TextStim(win, text='Very Vivid', pos=(0,0), height=.05, color = 'red')
 smallFeedback = visual.TextStim(win, text='Not Vivid', pos=(0,0), height=.05,color = 'red')
 neutFeedback = visual.TextStim(win, text='Kind of Vivid', pos=(0,0), height=.05,color = 'red')
+naFeedback = visual.TextStim(win, text='No response recorded', pos=(0,0), height=.05,color = 'red')
 
 # randomize trials
 trialInfo = trialInfo.sample(frac=1)
@@ -132,34 +133,41 @@ for t in np.arange(0,nTrials) :
             myText.draw()
             win.flip()
     
-     # record when stimulus removed
-    if myScale.noResponse == False: 
-        out.loc[t,'trialEnd'] = expClock.getTime()
-     
-    
     trialResp = myScale.getRating()
     trialRT = myScale.getRT()
     
-        # show feedback
-    if trialResp < 4:
-        smallFeedback.draw()
-        out.loc[t,'val'] = 'notVivid'
-    elif trialResp > 4:
-        bigFeedback.draw()
-        out.loc[t,'val'] = 'Vivid'
-    else:
-        neutFeedback.draw()
-        out.loc[t,'val'] = 'Neutral'
+     # record when stimulus removed
+    if myScale.noResponse == False: 
+        out.loc[t,'trialEnd'] = expClock.getTime()
+        if trialResp < 4:
+            smallFeedback.draw()
+            out.loc[t,'val'] = 'notVivid'
+        elif trialResp > 4:
+            bigFeedback.draw()
+            out.loc[t,'val'] = 'Vivid'
+        else:
+            neutFeedback.draw()
+            out.loc[t,'val'] = 'Neutral'
+        win.flip()
+        fbClock.reset()
+        while fbClock.getTime() < fbDur:
+            core.wait(.001)
+    
+    elif myScale.noResponse == True: 
+        naFeedback.draw()
+        out.loc[t,'val'] = 'NA'
     win.flip()
     fbClock.reset()
     while fbClock.getTime() < fbDur:
         core.wait(.001)
     
-    
     # save responses       
     if myScale.noResponse == False: #if response was made
          out.loc[t, 'rating'] = trialResp
          out.loc[t, 'rt'] = trialRT
+    else:
+         out.loc[t, 'rating'] = 'NA'
+         out.loc[t, 'rt'] = 'NA'
          out.loc[[t]].to_csv(outputFileName, mode = 'a', header = False, index = False)
       
 
